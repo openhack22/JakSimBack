@@ -20,6 +20,7 @@ def hello_world():
 @app.route("/regist", methods = ['POST'])
 def regist():
     """Regist ID Form"""
+    print(request.form)
     id = request.form['id']
     password = request.form['password']
     username = request.form['username']
@@ -45,9 +46,11 @@ def login():
     print (jsonString)
     return jsonString
 
-@app.route("/checkID", methods = [])
+
+@app.route("/checkID", methods = ['POST'])
 def checkID():
-    id = request.form[id]
+    print(request.form)
+    id = request.form['id']
     resDB = db.chkID(id)
     jsonResult = {
         'result': resDB
@@ -56,25 +59,39 @@ def checkID():
     print(jsonString)
     return jsonString
 
-@app.route("/logout")
+@app.route("/logout" , methods = ['POST'])
 def logout():
     """Logout Form"""
+    id = request.form['id']
+    jsonResult = {
+        'result': 200
+    }
+    jsonString = json.dumps(jsonResult)
+    print(jsonString)
+    return jsonString
+
+@app.route("/addRoom", methods = ['POST'])
+def addRoom():
     id = request.form[id]
-    return 200
+    gool_name = request.form[goalName]
+    goal_description = request.form[goalDescription]
+    duration = request.form[duration]
+    cost = request.form[money]
+    userNum = request.form[userName]
+    user_limit = request.form[user_limit]
+    resDB = db.addRoom(id,gool_name,goal_description,duration,cost,userNum, user_limit)
+    jsonResult = {
+        'result': resDB
+    }
+    jsonString = json.dumps(jsonResult)
+    print(jsonString)
+    return jsonString
 
-@app.route("/setGoal")
-def setGoal():
-    id = request.form[id]
-    due_date = request.form[]
-    goalName = request.form[]
 
-
-
-@app.route("/getList")
+@app.route("/getList" , methods = ['POST'])
 def getGoalList():
     """get Goal List Form"""
     id = request.form[id]
-
     resDB = db.getOnGoingList(id)
     print(resDB)
     #for tuple in resDB:
@@ -86,7 +103,7 @@ def getGoalList():
 
 
 if __name__ == '__main__':
-    db.createSchema()
-    app.run(host='10.10.2.88', port = 5000, debug='True')
+#    db.createSchema()
+    app.run(host='10.10.2.88', port = 5000, debug = True)
 
 
