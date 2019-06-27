@@ -83,7 +83,6 @@ def userLogin(id,password):
     SQL_user = 'SELECT * FROM user WHERE id = %s'
     curs.execute(SQL_user, (id))
     n = curs.fetchone()
-    print(n)
     if( n == None):
         return 400
     elif password == n[1]:
@@ -100,8 +99,11 @@ def getMyGoalList(id):
 
 def addRoom(user_ID, goalName,goalDescription, duration, amount, user_limit):
     curs.execute("use jaksim")
-    global goal_id
-    goal_id += 1
+    curs.execute('SELECT goal_id FROM goal ORDER BY goal_id DESC')
+    goal_id = curs.fetchone()[0] + 1
+    print(goal_id  )
+    #global goal_id
+    #goal_id += 1
     SQL_goal_regist = 'INSERT INTO goal (goal_id, goal_name, user_id, duration, amount, user_limit, description) VALUES (%s, %s, %s, %s, %s, %s, %s)'
     curs.execute(SQL_goal_regist, (str(goal_id), goalName, user_ID, duration, amount, user_limit, goalDescription))
     conn.commit()
@@ -125,9 +127,3 @@ def getWatingList(duration):
     curs.execute(SQL_watingList, (duration))
     n = curs.fetchall()
     return n
-
-#def something(user_ID, now, image):
-
-if '__name__' == '__main__':
-    print("Asdf")
-    getWatingList()

@@ -130,10 +130,17 @@ def getWatingList():
     resDB = db.getWatingList(duration)
     for tuple in resDB:
         print(tuple)
+
     # for tuple in resDB:
 
     jsonResult = {
-
+        "goal_id" : [x[0] for x in resDB],
+        "goal_name" : [x[1] for x in resDB ],
+        "user_id" : [x[2] for x in resDB ],
+        "duration": [x[3] for x in resDB],
+        "amount": [x[4] for x in resDB],
+        "user_limit": [x[5] for x in resDB],
+        "description": [x[6] for x in resDB],
     }
     resJson = json.dumps(jsonResult)
     print("/getWatingList  -> ")
