@@ -11,10 +11,10 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.before_request
-def make_session_permanent():
-    session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=60)
+#@app.before_request
+#def make_session_permanent():
+#    session.permanent = True
+#    app.permanent_session_lifetime = timedelta(minutes=60)
 
 
 @app.route("/regist", methods = ['POST'])
@@ -25,8 +25,6 @@ def regist():
     username = request.form['username']
     #print(request.form)
     resDB = db.userRegist(id,password,username)
-    if resDB == 200:
-        session[id] = id
     jsonresult = {
         'result' : resDB
     }
@@ -39,11 +37,7 @@ def login():
     """Login Form"""
     id = request.form['id']
     password = request.form['password']
-    #print(request.form)
     resDB = db.userLogin(id,password)
-
-    if resDB == 200:
-        session[id] = id
 
     jsonResult = {
         'result' : resDB
@@ -57,21 +51,20 @@ def login():
 def logout():
     """Logout Form"""
     id = request.form[id]
-    session.pop(id,None)
     return 200
 
+@app.route("/setGoal")
+def setGoal():
+    id = request.form[id]
 
 @app.route("/getList")
 def getGoalList():
     """get Goal List Form"""
     id = request.form[id]
-    if not session.get(id):
-        jsonResult = {
-            'result': 401
-        }
-        jsonString = json.dumps(jsonResult)
-        return jsonString
+
     resDB = db.getOnGoingList(id)
+    print(resDB)
+    #for tuple in resDB:
     jsonResult = {
         'result': resDB
     }
@@ -80,7 +73,7 @@ def getGoalList():
 
 
 if __name__ == '__main__':
-    db.createSchema()
-    app.run()
+    #db.createSchema()
+    app.run(host='10.10.2.88', port = 5000, debug='True')
 
 

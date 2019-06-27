@@ -1,3 +1,6 @@
+drop database if exists jaksim;
+create database jaksim;
+
 drop table if exists user;
 create table user (
   id varchar(45) primary key,
