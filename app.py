@@ -29,14 +29,24 @@ def hello_world():
 @app.route("/regist", methods = ['POST'])
 def regist():
     """Regist ID Form"""
-
     print( "/resist  <- ")
     print(request.get_json())
     data = request.get_json()
+    for key, value in data.items():
+        print(key, value)
     id = data['id']
     password = data['password']
     username = data['username']
-    resDB = db.userRegist(id, password, username)
+    if 'bank' in request.get_json():
+        bank = data['bank']
+        cardnum = data['cardnum']
+        cvc = data['cvc']
+        carddue = data['carddue']
+        cardpassword = data['cardpassword']
+        resDB = db.userRegist(id, password, username, bank, cardnum, cvc, carddue, cardpassword)
+    else:
+        resDB = db.userRegist(id, password, username)
+
     jsonresult = {
         'result' : resDB
     }
@@ -215,6 +225,7 @@ def getRank():
     print("/joinRoom  -> ")
     print(resJson)
     return resJson
+
 
 
 

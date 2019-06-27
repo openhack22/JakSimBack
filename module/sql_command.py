@@ -21,7 +21,12 @@ def createSchema():
                               username varchar(20) not null,
                               income int not null default 0,
                               outcome int not null default 0,
-                              amount int not null default 0
+                              amount int not null default 0,
+                              bank varchar(20) default null,
+                              cardnum varchar(45) default null,
+                              cvc varchar(3) default null,
+                              carddue date default null,
+                              cardpassword varchar(45) default null
                             ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
                             ''')
     conn.commit()
@@ -65,17 +70,22 @@ def chkID(id):
         return 400
 
 # Sign up
-def userRegist(id,password,username):
+def userRegist(id , password, username, bank = None, cardnum = None, cvc = None, carddue = None, cardpassword = None):
     curs.execute("use jaksim")
     SQL_chk = 'SELECT * FROM User WHERE id = %s'
     curs.execute(SQL_chk, (id))
     n = curs.fetchone()
     if (n==None):
-        SQL_regist = 'INSERT INTO user (id,password,username) VALUES (%s,%s,%s)'
-        curs.execute(SQL_regist, (id, password,username))
+        if bank != None:
+            SQL_regist = 'INSERT INTO user (id,password, username, bank, cardnum, cvc, carddue, cardpassword) VALUES (%s,%s,%s, %s, %s,%s,%s, %s)'
+            curs.execute(SQL_regist, (id, password, username, bank, cardnum, cvc, carddue, cardpassword))
+        else :
+            SQL_regist = 'INSERT INTO user (id,password,username) VALUES (%s,%s,%s)'
+            curs.execute(SQL_regist, (id, password, username))
         conn.commit()
         return 200
-    else: return 400
+    else:
+        return 400
 
 # Sign in
 def userLogin(id,password):
