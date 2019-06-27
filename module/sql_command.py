@@ -97,21 +97,6 @@ def getMyGoalList(id):
     curs.execute(SQL_chk, (id))
     n = curs.fetchone()
 
-def addRoom(user_ID, goalName,goalDescription, duration, amount, user_limit):
-    curs.execute("use jaksim")
-    curs.execute('SELECT goal_id FROM goal ORDER BY goal_id DESC')
-    goal_id = curs.fetchone()[0] + 1
-    #global goal_id
-    #goal_id += 1
-    SQL_goal_regist = 'INSERT INTO goal (goal_id, goal_name, user_id, duration, amount, user_limit, description) VALUES (%s, %s, %s, %s, %s, %s, %s)'
-    curs.execute(SQL_goal_regist, (str(goal_id), goalName, user_ID, duration, amount, user_limit, goalDescription))
-    conn.commit()
-
-    SQL_team_regist = 'INSERT INTO Team (goal_id,goal_name, user_ID, date) VALUES (%s, %s, %s, %s)'
-    now = datetime.datetime.now()
-    curs.execute(SQL_team_regist, (str(goal_id), goalName,user_ID, now))
-
-    conn.commit()
 
 def getMyList(user_id):
     curs.execute("use jaksim")
@@ -127,6 +112,21 @@ def getWatingList(duration):
     n = curs.fetchall()
     return n
 
+def addRoom(user_ID, goalName,goalDescription, duration, amount, user_limit):
+    curs.execute("use jaksim")
+    curs.execute('SELECT goal_id FROM goal ORDER BY goal_id DESC')
+    goal_id = curs.fetchone()[0] + 1
+    SQL_goal_regist = 'INSERT INTO goal (goal_id, goal_name, user_id, duration, amount, user_limit, description) VALUES (%s, %s, %s, %s, %s, %s, %s)'
+    curs.execute(SQL_goal_regist, (str(goal_id), goalName, user_ID, duration, amount, user_limit, goalDescription))
+    conn.commit()
+
+    SQL_team_regist = 'INSERT INTO Team (goal_id,goal_name, user_ID, date) VALUES (%s, %s, %s, %s)'
+    now = datetime.datetime.now()
+    curs.execute(SQL_team_regist, (str(goal_id), goalName,user_ID, now))
+    conn.commit()
+    return goal_id
+
+
 def joinRoom(user_id, goal_id):
     curs.execute("use jaksim")
     SQL_limit = 'SELECT user_limit, goal_name  FROM goal WHERE goal_id = %s'
@@ -135,10 +135,24 @@ def joinRoom(user_id, goal_id):
     SQL_goal = 'SELECT DISTINCT user_id  FROM team WHERE goal_id = %s'
     curs.execute(SQL_goal, (goal_id))
     people = curs.fetchall()
+
     if len(people) >= goal_info[0]:
         return 400
+
     now = datetime.datetime.now()
     SQL_join = 'INSERT INTO team (goal_id, goal_name, user_id, date) VALUE(%s,%s,%s,%s) '
     curs.execute(SQL_join, ( goal_id, goal_info[1], user_id, now ))
     conn.commit()
     return 200
+
+def getRank(goal_id):
+    curs.execute("use jaksim")
+    SQL_search = 'SELECT user_id, count(*) ' \
+                 'FROM team ' \
+                 'WHERE goal_id  = %s ' \
+                 'GROUP BY user_id ' \
+                 'ORDER BY COUNT(*) DESC'
+    curs.execute(SQL_search, (goal_id))
+    n = curs.fetchall()
+    return n
+

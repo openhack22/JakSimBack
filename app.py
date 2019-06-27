@@ -1,9 +1,25 @@
-from flask import Flask, request, session
+from flask import Flask, request
 import module.sql_command as db
 import json
+from flask_socketio import SocketIO, send, join_room, emit
+
 
 app = Flask(__name__)
 app.secret_ket = 'JaksimForever'
+
+'''
+socket_io = SocketIO(app)
+
+
+
+@socket_io.on("join")
+def request(json):
+    print(str(json))
+    print(json["user_id"])
+    print(json["goal_id"])
+    emit("start");
+
+'''
 
 @app.route('/')
 def hello_world():
@@ -43,7 +59,7 @@ def login():
         'username' : resDB
     }
     resJson = json.dumps(jsonResult)
-    print("/resist  -> ")
+    print("/login  -> ")
     print(resJson)
     return resJson
 
@@ -78,25 +94,6 @@ def logout():
     print(resJson)
     return resJson
 
-@app.route("/addRoom", methods = ['POST'])
-def addRoom():
-    print("/addRoom <- ")
-    print(request.get_json())
-    data = request.get_json()
-    id = data['id']
-    goal_name = data['goalName']
-    goal_description = data['goalDescription']
-    duration = data['duration']
-    cost = data['money']
-    user_limit = data['userNum']
-    resDB = db.addRoom(id, goal_name, goal_description, duration, cost, user_limit)
-    jsonResult = {
-        'result': resDB
-    }
-    resJson = json.dumps(jsonResult)
-    print("/addRoom  <- ")
-    print(resJson)
-    return resJson
 
 
 @app.route("/getMyList" , methods = ['POST'])
@@ -154,6 +151,35 @@ def getWatingList():
     return resJson
 
 
+@app.route("/addRoom", methods = ['POST'])
+def addRoom():
+    print(request)
+    print("/addRoom <- ")
+    print(request.get_json())
+    data = request.get_json()
+    id = data['id']
+    goal_name = data['goalName']
+    goal_description = data['goalDescription']
+    duration = data['duration']
+    cost = data['money']
+    user_limit = data['userNum']
+    resDB = db.addRoom(id, goal_name, goal_description, duration, cost, user_limit)
+    if resDB == 400:
+        jsonResult = {
+            'result': resDB,
+        }
+    else :
+        jsonResult = {
+            'result' : '200',
+            'group_id' : resDB
+        }
+    resJson = json.dumps(jsonResult)
+    print("/addRoom  <- ")
+    print(resJson)
+    return resJson
+
+
+
 @app.route("/joinRoom", methods=['POST'])
 def joinRoom():
     """User joing room funciton"""
@@ -164,7 +190,26 @@ def joinRoom():
     goal_id = data['goal_id']
     resDB = db.joinRoom(user_id,goal_id)
     jsonResult = {
-        "result" : "200"
+        "result" : resDB
+    }
+    resJson = json.dumps(jsonResult)
+    print("/joinRoom  -> ")
+    print(resJson)
+    return resJson
+
+@app.route("/getRank", methods=['POST'])
+def getRank():
+    """Rank"""
+    print("/getRank  <- ")
+    print(request.get_json())
+
+    data = request.get_json()
+    goal_id = data['goal_id']
+    resDB = db.getRank(goal_id)
+
+    jsonResult = {
+        "user_ID" : [x[0] for x in resDB ],
+        "count": [x[1] for x in resDB]
     }
     resJson = json.dumps(jsonResult)
     print("/joinRoom  -> ")
@@ -175,6 +220,7 @@ def joinRoom():
 
 if __name__ == '__main__':
     #db.createSchema()
+#    socket_io.run(app, host='0.0.0.0', port = 5000, debug = True)
     app.run(host='10.10.2.88', port = 5000, debug = True)
 
 
