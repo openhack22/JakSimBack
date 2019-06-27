@@ -101,7 +101,6 @@ def addRoom(user_ID, goalName,goalDescription, duration, amount, user_limit):
     curs.execute("use jaksim")
     curs.execute('SELECT goal_id FROM goal ORDER BY goal_id DESC')
     goal_id = curs.fetchone()[0] + 1
-    print(goal_id  )
     #global goal_id
     #goal_id += 1
     SQL_goal_regist = 'INSERT INTO goal (goal_id, goal_name, user_id, duration, amount, user_limit, description) VALUES (%s, %s, %s, %s, %s, %s, %s)'
@@ -133,7 +132,7 @@ def joinRoom(user_id, goal_id):
     SQL_limit = 'SELECT user_limit, goal_name  FROM goal WHERE goal_id = %s'
     curs.execute(SQL_limit, (goal_id))
     goal_info = curs.fetchone()
-    SQL_goal = 'SELECT user_id  FROM team WHERE goal_id = %s'
+    SQL_goal = 'SELECT DISTINCT user_id  FROM team WHERE goal_id = %s'
     curs.execute(SQL_goal, (goal_id))
     people = curs.fetchall()
     if len(people) >= goal_info[0]:
@@ -142,5 +141,4 @@ def joinRoom(user_id, goal_id):
     SQL_join = 'INSERT INTO team (goal_id, goal_name, user_id, date) VALUE(%s,%s,%s,%s) '
     curs.execute(SQL_join, ( goal_id, goal_info[1], user_id, now ))
     conn.commit()
-
     return 200
