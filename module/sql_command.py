@@ -34,7 +34,8 @@ def createSchema():
                               duration int not null ,
                               amount int not null ,
                               user_limit int not null ,
-                              description text
+                              description text,
+                              status boolean not null default 0
                               ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
                               ''')
     conn.commit()
@@ -105,9 +106,9 @@ def addRoom(user_ID, goalName,goalDescription, duration, amount, user_limit):
     curs.execute(SQL_goal_regist, (str(goal_id), goalName, user_ID, duration, amount, user_limit, goalDescription))
     conn.commit()
 
-    SQL_team_regist = 'INSERT INTO Team (goal_id,goal_name, user_ID, date, status) VALUES (%s, %s, %s, %s, %s)'
+    SQL_team_regist = 'INSERT INTO Team (goal_id,goal_name, user_ID, date) VALUES (%s, %s, %s, %s)'
     now = datetime.datetime.now()
-    curs.execute(SQL_team_regist, (str(goal_id), goalName,user_ID, now, "0"))
+    curs.execute(SQL_team_regist, (str(goal_id), goalName,user_ID, now))
 
     conn.commit()
 
@@ -118,4 +119,15 @@ def getMyList(user_id):
     n = curs.fetchall()
     return n
 
+def getWatingList(duration):
+    curs.execute("use jaksim")
+    SQL_watingList = 'SELECT * FROM goal WHERE status = 0 and duration = %s'
+    curs.execute(SQL_watingList, (duration))
+    n = curs.fetchall()
+    return n
+
 #def something(user_ID, now, image):
+
+if '__name__' == '__main__':
+    print("Asdf")
+    getWatingList()
