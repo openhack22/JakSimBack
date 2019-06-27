@@ -91,23 +91,25 @@ def addRoom():
     return jsonString
 
 
-@app.route("/getList" , methods = ['POST'])
-def getGoalList():
+@app.route("/getMyList" , methods = ['POST'])
+def getMyList():
     """get Goal List Form"""
     data = request.get_json()
-    id = data[id]
-    resDB = db.getOnGoingList(id)
-    print(resDB)
+    id = data['id']
+    print(id)
+    resDB = db.getMyList(id)
+    for tuple in resDB:
+        print(tuple)
     #for tuple in resDB:
     jsonResult = {
-        'result': resDB
+        'result': 200
     }
-
+    return jsonResult
     #return resJson
 
 
 if __name__ == '__main__':
-    db.createSchema()
+  #  db.createSchema()
     app.run(host='10.10.2.88', port = 5000, debug = True)
 
 

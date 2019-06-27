@@ -21,7 +21,8 @@ def createSchema():
                               username varchar(20) not null,
                               income int not null default 0,
                               outcome int not null default 0,
-                              amount int not null default 0)
+                              amount int not null default 0
+                            ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
                             ''')
     conn.commit()
 
@@ -33,17 +34,21 @@ def createSchema():
                               duration int not null ,
                               amount int not null ,
                               user_limit int not null ,
-                              description text)''')
+                              description text
+                              ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
+                              ''')
     conn.commit()
 
     # Create Team Table
     conn.cursor().execute('''create table team (
                               goal_id int references goal(goal_id) on update cascade,
                               user_id varchar(45) references user(id) on update cascade,
-                              date date,
+                              date datetime,
                               image text,
                               status boolean not null default 0,
-                              PRIMARY KEY( goal_id, user_id, date ))''')
+                              PRIMARY KEY( goal_id, user_id, date )
+                              ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
+                              ''')
     conn.commit()
 
 
@@ -95,13 +100,13 @@ def addRoom(user_ID, goalName,goalDescription, duration, amount, user_limit):
     curs.execute("use jaksim")
     global goal_id
     goal_id += 1
-    SQL_goal_regist = 'INSERT INTO goal (goal_id, goal_name, user_id, duration, amount, user_limit, descriptipn) VALUES (%s, %s, %s, %s, %s, %s)'
+    SQL_goal_regist = 'INSERT INTO goal (goal_id, goal_name, user_id, duration, amount, user_limit, description) VALUES (%s, %s, %s, %s, %s, %s, %s)'
     curs.execute(SQL_goal_regist, (str(goal_id), goalName, user_ID, duration, amount, user_limit, goalDescription))
     conn.commit()
 
-    SQL_team_regist = 'INSERT INTO Team (gool_id, user_ID, date, status) VALUES (%s, %s, %s, %s)'
+    SQL_team_regist = 'INSERT INTO Team (goal_id, user_ID, date, status) VALUES (%s, %s, %s, %s)'
     now = datetime.datetime.now()
-    curs.execute(SQL_team_regist, (str(goal_id), user_ID, now, 0))
+    curs.execute(SQL_team_regist, (str(goal_id), user_ID, now, "0"))
 
     conn.commit()
 
@@ -109,7 +114,7 @@ def getMyList(user_id):
     curs.execute("use jaksim")
     SQL_user = 'SELECT * FROM team WHERE user_id = %s'
     curs.execute(SQL_user, (user_id))
-    n = curs.fetchAll()
+    n = curs.fetchall()
     return n
 
 
