@@ -10,15 +10,12 @@ app.secret_ket = 'JaksimForever'
 '''
 socket_io = SocketIO(app)
 
-
-
 @socket_io.on("join")
 def request(json):
     print(str(json))
     print(json["user_id"])
     print(json["goal_id"])
     emit("start");
-
 '''
 
 @app.route('/')
@@ -112,9 +109,10 @@ def getMyList():
     data = request.get_json()
     id = data['id']
 
-    resDB = db.getMyList(id)
-    for tuple in resDB:
-        print(tuple)
+    resDB, limit, cnt = db.getMyList(id)
+    print(resDB)
+    print(limit)
+    print(cnt)
     #for tuple in resDB:
     jsonResult = {
         "goal_id": [ x[0] for x in resDB ],
@@ -123,6 +121,8 @@ def getMyList():
         "date": [ x[3].strftime('%Y-%m-%d') for x in resDB ],
         "image": [x[4] for x in resDB],
         "status": [x[5] for x in resDB],
+        "limit" : [ x for x in limit],
+        "people": [x for x in cnt]
     }
     resJson = json.dumps(jsonResult)
     print("/resJson  -> ")

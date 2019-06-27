@@ -111,10 +111,24 @@ def getMyGoalList(id):
 
 def getMyList(user_id):
     curs.execute("use jaksim")
-    SQL_user = 'SELECT * FROM team WHERE user_id = %s'
+    SQL_user = 'SELECT DISTINCT * FROM team WHERE user_id = %s'
     curs.execute(SQL_user, (user_id))
     n = curs.fetchall()
-    return n
+    limit = []
+    cnt = []
+    for item in n:
+        goal_id = item[0]
+        SQL_select = 'SELECT user_limit FROM goal WHERE goal_id = %s'
+        curs.execute(SQL_select, (goal_id))
+        user_limit = curs.fetchone()[0]
+        limit.append(user_limit)
+
+        SQL_select = 'SELECT count(*) FROM team WHERE goal_id = %s and user_id = %s GROUP BY user_id'
+        curs.execute(SQL_select, (goal_id,user_id))
+        count = curs.fetchone()[0]
+        cnt.append(count)
+
+    return n, limit, cnt
 
 def getWatingList(duration):
     curs.execute("use jaksim")
