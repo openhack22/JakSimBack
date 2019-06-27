@@ -220,7 +220,7 @@ def getRank():
 
 if __name__ == '__main__':
     #db.createSchema()
-#    socket_io.run(app, host='0.0.0.0', port = 5000, debug = True)
+    #socket_io.run(app, host='0.0.0.0', port = 5000, debug = True)
     app.run(host='10.10.2.88', port = 5000, debug = True)
 
 
