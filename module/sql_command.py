@@ -2,6 +2,7 @@
 import pymysql
 import datetime
 
+goal_id = 0
 conn = pymysql.connect(host='127.0.0.1', user = 'root', password = 'root', charset='utf8')
 curs = conn.cursor()
 
@@ -26,7 +27,8 @@ def createSchema():
 
     # Create Goal Table
     conn.cursor().execute('''create table goal (
-                              goal_id int auto_increment primary key,
+                              goal_id int primary key,
+                              goal_name varchar(20) not null,
                               user_id varchar(45) not null,
                               duration int not null ,
                               amount int not null ,
@@ -89,12 +91,27 @@ def getMyGoalList(id):
     curs.execute(SQL_chk, (id))
     n = curs.fetchone()
 
-def addRoom(user_ID, goalName,goalDescription, duration, amount, userNum,user_limit,description):
-    SQL_goal_regist = 'INSERT INTO user (goal_name, duration, amount, user_limit, descritipn) VALUES (%s,%s,%s, %s, %s)'
-    curs.execute(SQL_goal_regist, (goalName, duration, amount, user_limit, goalDescription))
+def addRoom(user_ID, goalName,goalDescription, duration, amount, user_limit):
+    curs.execute("use jaksim")
+    global goal_id
+    goal_id += 1
+    SQL_goal_regist = 'INSERT INTO goal (goal_id, goal_name, user_id, duration, amount, user_limit, descriptipn) VALUES (%s, %s, %s, %s, %s, %s)'
+    curs.execute(SQL_goal_regist, (str(goal_id), goalName, user_ID, duration, amount, user_limit, goalDescription))
     conn.commit()
 
+    SQL_team_regist = 'INSERT INTO Team (gool_id, user_ID, date, status) VALUES (%s, %s, %s, %s)'
+    now = datetime.datetime.now()
+    curs.execute(SQL_team_regist, (str(goal_id), user_ID, now, 0))
+
+    conn.commit()
+
+def getMyList(user_id):
+    curs.execute("use jaksim")
+    SQL_user = 'SELECT * FROM team WHERE user_id = %s'
+    curs.execute(SQL_user, (user_id))
+    n = curs.fetchAll()
+    return n
+
+
+
 #def something(user_ID, now, image):
-  #  SQL_team_regist = 'INSERT INTO Team (user_ID,date,image,status) VALUES (%s,%s,%s, %s, %s)'
- #   now = datetime.datetime.now()
-#    curs.execute(SQL_team_regist, (user_ID, now, image)

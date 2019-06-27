@@ -20,12 +20,13 @@ def hello_world():
 @app.route("/regist", methods = ['POST'])
 def regist():
     """Regist ID Form"""
-    print(request.form)
-    id = request.form['id']
-    password = request.form['password']
-    username = request.form['username']
-    #print(request.form)
-    resDB = db.userRegist(id,password,username)
+    print("Check THis OUt ")
+    print( request.get_json())
+    data = request.get_json()
+    id = data['id']
+    password = data['password']
+    username = data['username']
+    resDB = db.userRegist(id, password, username)
     jsonresult = {
         'result' : resDB
     }
@@ -33,12 +34,13 @@ def regist():
     return resJson
 
 
-@app.route("/login", methods = ['POST'])
+@app.route("/login", methods=['POST'])
 def login():
     """Login Form"""
-    id = request.form['id']
-    password = request.form['password']
-    resDB = db.userLogin(id,password)
+    data = request.get_json()
+    id = data['id']
+    password = data['password']
+    resDB = db.userLogin(id, password)
     jsonResult = {
         'username' : resDB
     }
@@ -49,8 +51,8 @@ def login():
 
 @app.route("/checkID", methods = ['POST'])
 def checkID():
-    print(request.form)
-    id = request.form['id']
+    data = request.get_json()
+    id = data['id']
     resDB = db.chkID(id)
     jsonResult = {
         'result': resDB
@@ -62,7 +64,8 @@ def checkID():
 @app.route("/logout" , methods = ['POST'])
 def logout():
     """Logout Form"""
-    id = request.form['id']
+    data = request.get_json()
+    id = data['id']
     jsonResult = {
         'result': 200
     }
@@ -72,14 +75,14 @@ def logout():
 
 @app.route("/addRoom", methods = ['POST'])
 def addRoom():
-    id = request.form['id']
-    gool_name = request.form['goalName']
-    goal_description = request.form['goalDescription']
-    duration = request.form['duration']
-    cost = request.form['money']
-    userNum = request.form['userName']
-    user_limit = request.form['user_limit']
-    resDB = db.addRoom(id,gool_name,goal_description,duration,cost,userNum, user_limit)
+    data = request.get_json()
+    id = data['id']
+    goal_name = data['goalName']
+    goal_description = data['goalDescription']
+    duration = data['duration']
+    cost = data['money']
+    user_limit = data['userNum']
+    resDB = db.addRoom(id, goal_name, goal_description, duration, cost, user_limit)
     jsonResult = {
         'result': resDB
     }
@@ -91,7 +94,8 @@ def addRoom():
 @app.route("/getList" , methods = ['POST'])
 def getGoalList():
     """get Goal List Form"""
-    id = request.form[id]
+    data = request.get_json()
+    id = data[id]
     resDB = db.getOnGoingList(id)
     print(resDB)
     #for tuple in resDB:
@@ -103,7 +107,7 @@ def getGoalList():
 
 
 if __name__ == '__main__':
-#    db.createSchema()
+    db.createSchema()
     app.run(host='10.10.2.88', port = 5000, debug = True)
 
 
