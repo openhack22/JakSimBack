@@ -226,8 +226,8 @@ def getRank():
 
 @app.route("/getGoalInfo", methods=['POST'])
 def getGoalInfo():
-    "goal Info"
-    print("/getGoalInfo  -> ")
+    """goal Info"""
+    print("/getGoalInfo  <- ")
     print(request.get_json())
     goal_id = request.get_json()['goal_id']
     resDB = db.getGoalInfo(goal_id)
@@ -250,17 +250,48 @@ def getGoalInfo():
 
 @app.route("/start", methods=['POST'])
 def start():
-    "start goal"
-    print("/start  -> ")
+    """start goal"""
+    print("/start  <- ")
     print(request.get_json())
     goal_id = request.get_json()['goal_id']
     resDB = db.start(goal_id)
-    print(resDB)
     jsonResult = {
         "result" : resDB
     }
     resJson = json.dumps(jsonResult)
     print("/start  -> ")
+    print(resJson)
+    return resJson
+
+@app.route("/win", methods=['POST'])
+def win():
+    """win"""
+    print("/win  <- ")
+    print(request.get_json())
+    goal_id = request.get_json()['goal_id']
+    user_id = request.get_json()['id']
+    resDB = db.win(goal_id, user_id)
+    jsonResult = {
+        "result" : resDB
+    }
+    resJson = json.dumps(jsonResult)
+    print("/win  -> ")
+    print(resJson)
+    return resJson
+
+@app.route("/lose", methods=['POST'])
+def lose():
+    """lose"""
+    print("/lose  <- ")
+    print(request.get_json())
+    goal_id = request.get_json()['goal_id']
+    user_id = request.get_json()['id']
+    resDB = db.lose(goal_id, user_id)
+    jsonResult = {
+        "result" : resDB
+    }
+    resJson = json.dumps(jsonResult)
+    print("/lose  -> ")
     print(resJson)
     return resJson
 

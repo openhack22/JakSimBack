@@ -187,9 +187,32 @@ def start(goal_id):
     SQL_set = 'UPDATE goal set status = 1  where goal_id = %s'
     curs.execute(SQL_set, (goal_id))
     conn.commit()
-    n = curs.fetchall()
     SQL_set = 'UPDATE team set status = 1  where goal_id = %s'
     curs.execute(SQL_set, (goal_id))
     conn.commit()
-    n = curs.fetchall()
     return 200
+
+def win(goal_id, user_id):
+    curs.execute("use jaksim")
+    SQL_set = 'UPDATE goal set status = 100  where goal_id = %s and user_id = %s'
+    curs.execute(SQL_set, (goal_id,user_id))
+    conn.commit()
+    SQL_set = 'UPDATE team set status = 100  where goal_id = %s and user_id = %s'
+    curs.execute(SQL_set, (goal_id, user_id))
+    conn.commit()
+    goal_info = getGoalInfo(goal_id)
+    price =  int(goal_info[0][4]) * ( int(goal_info[1]) -1 )
+    return price
+
+
+def lose(goal_id, user_id):
+    curs.execute("use jaksim")
+    SQL_set = 'UPDATE goal set status = -1  where goal_id = %s and user_id = %s'
+    curs.execute(SQL_set, (goal_id, user_id))
+    conn.commit()
+    SQL_set = 'UPDATE team set status = -1  where goal_id = %s and user_id = %s'
+    curs.execute(SQL_set, (goal_id, user_id))
+    conn.commit()
+    goal_info = getGoalInfo(goal_id)
+    price = -int(goal_info[0][4])
+    return price
