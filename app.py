@@ -72,13 +72,13 @@ def logout():
 
 @app.route("/addRoom", methods = ['POST'])
 def addRoom():
-    id = request.form[id]
-    gool_name = request.form[goalName]
-    goal_description = request.form[goalDescription]
-    duration = request.form[duration]
-    cost = request.form[money]
-    userNum = request.form[userName]
-    user_limit = request.form[user_limit]
+    id = request.form['id']
+    gool_name = request.form['goalName']
+    goal_description = request.form['goalDescription']
+    duration = request.form['duration']
+    cost = request.form['money']
+    userNum = request.form['userName']
+    user_limit = request.form['user_limit']
     resDB = db.addRoom(id,gool_name,goal_description,duration,cost,userNum, user_limit)
     jsonResult = {
         'result': resDB
