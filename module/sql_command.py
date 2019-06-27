@@ -52,6 +52,7 @@ def createSchema():
                               user_id varchar(45) references user(id) on update cascade,
                               date datetime,
                               image text,
+                              comment text,
                               status boolean not null default 0,
                               PRIMARY KEY( goal_id, user_id, date )
                               ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
@@ -125,7 +126,11 @@ def getWatingList(duration):
 def addRoom(user_ID, goalName,goalDescription, duration, amount, user_limit):
     curs.execute("use jaksim")
     curs.execute('SELECT goal_id FROM goal ORDER BY goal_id DESC')
-    goal_id = curs.fetchone()[0] + 1
+    goal_id = curs.fetchone()
+    if goal_id == None:
+        goal_id = 1
+    else :
+         goal_id = goal_id[0] + 1
     SQL_goal_regist = 'INSERT INTO goal (goal_id, goal_name, user_id, duration, amount, user_limit, description) VALUES (%s, %s, %s, %s, %s, %s, %s)'
     curs.execute(SQL_goal_regist, (str(goal_id), goalName, user_ID, duration, amount, user_limit, goalDescription))
     conn.commit()
@@ -165,4 +170,16 @@ def getRank(goal_id):
     curs.execute(SQL_search, (goal_id))
     n = curs.fetchall()
     return n
+
+def getGoalInfo(goal_id):
+    curs.execute("use jaksim")
+    SQL_goal = 'SELECT * FROM goal where goal_id = %s'
+    curs.execute(SQL_goal, (goal_id))
+    goal_info = curs.fetchone()
+    SQL_search = 'SELECT user_id FROM team WHERE goal_id  = %s'
+    curs.execute(SQL_search, (goal_id))
+    n = curs.fetchall()
+    user_id = [x[0] for x in n]
+    return goal_info, len(n), user_id
+
 

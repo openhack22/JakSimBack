@@ -32,8 +32,6 @@ def regist():
     print( "/resist  <- ")
     print(request.get_json())
     data = request.get_json()
-    for key, value in data.items():
-        print(key, value)
     id = data['id']
     password = data['password']
     username = data['username']
@@ -117,7 +115,6 @@ def getMyList():
     resDB = db.getMyList(id)
     for tuple in resDB:
         print(tuple)
-    print(len(tuple))
     #for tuple in resDB:
     jsonResult = {
         "goal_id": [ x[0] for x in resDB ],
@@ -227,7 +224,45 @@ def getRank():
     return resJson
 
 
+@app.route("/getGoalInfo", methods=['POST'])
+def getGoalInfo():
+    "goal Info"
+    print("/getGoalInfo  -> ")
+    print(request.get_json())
+    goal_id = request.get_json()['goal_id']
+    resDB = db.getGoalInfo(goal_id)
+    print(resDB)
+    jsonResult = {
+        "goal_id" : resDB[0][0],
+        "goal_name" : resDB[0][1],
+        "duration": resDB[0][3],
+        "amount": resDB[0][4],
+        "user_limit": resDB[0][5],
+        "description": resDB[0][6],
+        "status": resDB[0][7],
+        "people" : resDB[1],
+        "user_list" : [ x for x in resDB[2]]
+    }
+    resJson = json.dumps(jsonResult)
+    print("/getGoalInfo  -> ")
+    print(resJson)
+    return resJson
 
+@app.route("/start", methods=['POST'])
+def start():
+    "start goal"
+    print("/start  -> ")
+    print(request.get_json())
+    goal_id = request.get_json()['goal_id']
+    resDB = db.getGoalInfo(goal_id)
+    print(resDB)
+    jsonResult = {
+
+    }
+    resJson = json.dumps(jsonResult)
+    print("/start  -> ")
+    print(resJson)
+    return resJson
 
 if __name__ == '__main__':
     #db.createSchema()
