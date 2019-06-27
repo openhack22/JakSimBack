@@ -38,14 +38,23 @@ def login():
     id = request.form['id']
     password = request.form['password']
     resDB = db.userLogin(id,password)
-
     jsonResult = {
-        'result' : resDB
+        'username' : resDB
     }
     jsonString = json.dumps(jsonResult)
     print (jsonString)
     return jsonString
 
+@app.route("/checkID", methods = [])
+def checkID():
+    id = request.form[id]
+    resDB = db.chkID(id)
+    jsonResult = {
+        'result': resDB
+    }
+    jsonString = json.dumps(jsonResult)
+    print(jsonString)
+    return jsonString
 
 @app.route("/logout")
 def logout():
@@ -56,6 +65,10 @@ def logout():
 @app.route("/setGoal")
 def setGoal():
     id = request.form[id]
+    due_date = request.form[]
+    goalName = request.form[]
+
+
 
 @app.route("/getList")
 def getGoalList():
@@ -73,7 +86,7 @@ def getGoalList():
 
 
 if __name__ == '__main__':
-    #db.createSchema()
+    db.createSchema()
     app.run(host='10.10.2.88', port = 5000, debug='True')
 
 

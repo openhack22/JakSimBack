@@ -26,12 +26,11 @@ def createSchema():
     # Create Goal Table
     conn.cursor().execute('''create table goal (
                               goal_id int auto_increment primary key,
-                              goal_name varchar(45) not null,
+                              user_id varchar(45) not null,
                               duration int not null ,
                               amount int not null ,
                               user_limit int not null ,
                               money_stack int not null ,
-                              status boolean not null,
                               description text)''')
     conn.commit()
 
@@ -41,9 +40,20 @@ def createSchema():
                               user_id varchar(45) references user(id) on update cascade,
                               date date,
                               image text,
+                              status boolean not null default 0,
                               PRIMARY KEY( goal_id, user_id, date ))''')
     conn.commit()
 
+
+def chkID(id):
+    curs.execute("use jaksim")
+    SQL_chk = 'SELECT * FROM User WHERE id = %s'
+    curs.execute(SQL_chk, (id))
+    n = curs.fetchone()
+    if (n == None):
+        return 200
+    else:
+        return 400
 
 # Sign up
 def userRegist(id,password,username):
@@ -66,7 +76,7 @@ def userLogin(id,password):
     n = curs.fetchone()
     if( n == None):
         return 400
-    elif password == n[1]:
+    elif password == n[2]:
         return 200
     else:
         return -100
