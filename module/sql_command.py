@@ -127,3 +127,20 @@ def getWatingList(duration):
     curs.execute(SQL_watingList, (duration))
     n = curs.fetchall()
     return n
+
+def joinRoom(user_id, goal_id):
+    curs.execute("use jaksim")
+    SQL_limit = 'SELECT user_limit, goal_name  FROM goal WHERE goal_id = %s'
+    curs.execute(SQL_limit, (goal_id))
+    goal_info = curs.fetchone()
+    SQL_goal = 'SELECT user_id  FROM team WHERE goal_id = %s'
+    curs.execute(SQL_goal, (goal_id))
+    people = curs.fetchall()
+    if len(people) >= goal_info[0]:
+        return 400
+    now = datetime.datetime.now()
+    SQL_join = 'INSERT INTO team (goal_id, goal_name, user_id, date) VALUE(%s,%s,%s,%s) '
+    curs.execute(SQL_join, ( goal_id, goal_info[1], user_id, now ))
+    conn.commit()
+
+    return 200

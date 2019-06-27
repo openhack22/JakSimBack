@@ -110,9 +110,15 @@ def getMyList():
     resDB = db.getMyList(id)
     for tuple in resDB:
         print(tuple)
+    print(len(tuple))
     #for tuple in resDB:
     jsonResult = {
-        'result': 200
+        "goal_id": [ x[0] for x in resDB ],
+        "goal_name": [ x[1] for x in resDB ],
+        "user_id": [ x[2] for x in resDB ],
+        "date": [ x[3].strftime('%Y-%m-%d') for x in resDB ],
+        "image": [x[4] for x in resDB],
+        "status": [x[5] for x in resDB],
     }
     resJson = json.dumps(jsonResult)
     print("/resJson  -> ")
@@ -155,13 +161,16 @@ def joinRoom():
     print(request.get_json())
     data = request.get_json()
     user_id = data['id']
+    goal_id = data['goal_id']
+    resDB = db.joinRoom(user_id,goal_id)
     jsonResult = {
-        "result" : "asdf"
+        "result" : "200"
     }
     resJson = json.dumps(jsonResult)
     print("/joinRoom  -> ")
     print(resJson)
     return resJson
+
 
 
 if __name__ == '__main__':
