@@ -182,4 +182,14 @@ def getGoalInfo(goal_id):
     user_id = [x[0] for x in n]
     return goal_info, len(n), user_id
 
-
+def start(goal_id):
+    curs.execute("use jaksim")
+    SQL_set = 'UPDATE goal set status = 1  where goal_id = %s'
+    curs.execute(SQL_set, (goal_id))
+    conn.commit()
+    n = curs.fetchall()
+    SQL_set = 'UPDATE team set status = 1  where goal_id = %s'
+    curs.execute(SQL_set, (goal_id))
+    conn.commit()
+    n = curs.fetchall()
+    return 200

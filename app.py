@@ -254,10 +254,10 @@ def start():
     print("/start  -> ")
     print(request.get_json())
     goal_id = request.get_json()['goal_id']
-    resDB = db.getGoalInfo(goal_id)
+    resDB = db.start(goal_id)
     print(resDB)
     jsonResult = {
-
+        "result" : resDB
     }
     resJson = json.dumps(jsonResult)
     print("/start  -> ")
