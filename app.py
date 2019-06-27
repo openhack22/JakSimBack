@@ -1,5 +1,5 @@
 from flask import Flask, request, session
-import src.sql_command as db
+import module.sql_command as db
 import json
 from datetime import timedelta
 
@@ -80,4 +80,7 @@ def getGoalList():
 
 
 if __name__ == '__main__':
+    db.createSchema()
     app.run()
+
+
