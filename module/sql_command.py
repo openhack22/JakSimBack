@@ -42,6 +42,7 @@ def createSchema():
     # Create Team Table
     conn.cursor().execute('''create table team (
                               goal_id int references goal(goal_id) on update cascade,
+                              goal_name varchar(20) not null,
                               user_id varchar(45) references user(id) on update cascade,
                               date datetime,
                               image text,
@@ -104,9 +105,9 @@ def addRoom(user_ID, goalName,goalDescription, duration, amount, user_limit):
     curs.execute(SQL_goal_regist, (str(goal_id), goalName, user_ID, duration, amount, user_limit, goalDescription))
     conn.commit()
 
-    SQL_team_regist = 'INSERT INTO Team (goal_id, user_ID, date, status) VALUES (%s, %s, %s, %s)'
+    SQL_team_regist = 'INSERT INTO Team (goal_id,goal_name, user_ID, date, status) VALUES (%s, %s, %s, %s, %s)'
     now = datetime.datetime.now()
-    curs.execute(SQL_team_regist, (str(goal_id), user_ID, now, "0"))
+    curs.execute(SQL_team_regist, (str(goal_id), goalName,user_ID, now, "0"))
 
     conn.commit()
 
@@ -116,7 +117,5 @@ def getMyList(user_id):
     curs.execute(SQL_user, (user_id))
     n = curs.fetchall()
     return n
-
-
 
 #def something(user_ID, now, image):

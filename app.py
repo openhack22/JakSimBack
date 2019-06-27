@@ -104,8 +104,9 @@ def getMyList():
     jsonResult = {
         'result': 200
     }
-    return jsonResult
-    #return resJson
+    jsonString = json.dumps(jsonResult)
+    print(jsonString)
+    return jsonString
 
 
 if __name__ == '__main__':
