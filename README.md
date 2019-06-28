@@ -16,44 +16,44 @@
 python app.py
 ```
 ### API
-- ###회원가입
+- 회원가입
     ```
     [POST] /regist < = ( id, password, username )
     ```
-- ###중복 검사
+- 중복 검사
     ```
     [POST] /checkID < = ( id )
     ```
-- ###로그인
+- 로그인
     ```
     [POST] /login < = ( id, password )
     ```
-- ###현재 참여중인 목표 목록
+- 현재 참여중인 목표 목록
     ```
     [POST] /getMyList < = ( id )
     ```    
-- ###모집중인 목표 목록
+- 모집중인 목표 목록
     ```
     [POST] /getWaitingList < = ( duration )
     ```
     duration(기간)별로 검색
-- ###목표 공유방 생성
+- 목표 공유방 생성
     ```
     [POST] /addRoom < = ( id, goalName, goalDescription, duration, money, userNum )
     ```
-- ###목표 공유방 참석
+- 목표 공유방 참석
     ```
     [POST] /joinRoom < = ( id, goal_id )
     ```
-- ###목표 공유방 랭킹 조회
+- 목표 공유방 랭킹 조회
     ```
     [POST] /getRank < = ( goal_id )
     ```
-- ###목표 공유방 상세정보 검색
+- 목표 공유방 상세정보 검색
     ```
     [POST] /getGoalInfo < = ( goal_id )
     ```
-- ###목표 공유 시작
+- 목표 공유 시작
     ```
     [POST] /start < = ( goal_id )
     ```
